@@ -1,0 +1,54 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.btn {
+    margin: 10px;
+}
+
+input[type="number"],
+input[type="text"] {
+    padding: 5px;
+    margin: 5px;
+}
+
+#confirmation,
+#account,
+#tokenName,
+#tokenSymbol,
+#balance {
+    margin-bottom: 10px;
+}
+
+#burnId,
+#SAFASpender,
+#approveSpender,
+#approveTokenId,
+#TFSender,
+#TFReceiver,
+#TFTokenId,
+#STFSender,
+#STFReceiver,
+#STFTokenId {
+    width: 200px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERC721</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.0/dist/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <script src="ERC721.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="style721.css">
+
+</head>
+
+<body>
+    <h1>ERC721</h1>
+    <button type="button" class="btn btn-success" id="connectButton" onclick="connect()">Connect Metamask</button>
+    <br>
+    <p id="confirmation"></p>
+    <p id="account"></p>
+    <p id="tokenName"></p>
+    <p id="tokenSymbol"></p>
+    <p id="balance"></p>
+
+    <!-- <input type="text" id="ownerAdd" placeholder="token owner address"> -->
+    <button onclick="mintToken()">Mint</button>
+    <br>
+    <br>
+
+    <input type="number" id="burnId" placeholder="enter token ID">
+    <button onclick="burnToken()">Burn</button>
+    <br>
+    <br>
+
+    <input type="text" id="SAFASpender" placeholder="enter spender address">
+    <label>
+        Approve
+        <input type="radio" name="IsApprovedForAll" value="true" />
+    </label>
+    <label>
+        Revoke
+        <input type="radio" name="IsApprovedForAll" value="false" />
+    </label>
+    <button onclick="setApprovalForAllToken()">approve/revoke for all</button>
+    <br>
+    <br>
+
+    <input type="text" id="approveSpender" placeholder="enter spender address">
+    <input type="number" id="approveTokenId" placeholder="enter token ID">
+    <button onclick="approveToken()">approve</button>
+    <br>
+    <br>
+
+    <input type="text" id="TFSender" placeholder="enter sender address">
+    <input type="text" id="TFReceiver" placeholder="enter receiver address">
+    <input type="number" id="TFTokenId" placeholder="enter token ID">
+    <button onclick="transferFromToken()">Transfer</button>
+    <br>
+    <br>
+
+    <input type="text" id="STFSender" placeholder="enter sender address">
+    <input type="text" id="STFReceiver" placeholder="enter receiver address">
+    <input type="number" id="STFTokenId" placeholder="enter token ID">
+    <button onclick="safeTransferFromToken()">Safe Transfer</button>
+    <br>
+    <br>
+
+
+
+
+
+
+</body>
+
+</html>
