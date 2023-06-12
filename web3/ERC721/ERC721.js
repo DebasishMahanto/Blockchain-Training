@@ -1,5 +1,6 @@
 let web3;
 let aAccounts;
+let nGasUsed;
 let ERC721Contract;
 const contractAddress = "0x76851aa7C9835f972244B0C4c18040bD603d9972";
 const contractAbi = [
@@ -371,10 +372,6 @@ const contractAbi = [
     }
 ]
 
-
-
-
-
 async function connect() {
     return new Promise((resolve, reject) => {
         if (!window.ethereum) {
@@ -387,7 +384,7 @@ async function connect() {
             console.log("user account:", accounts[0]);
             $("#confirmation").html(`connected successfully`);
             $("#account").html(`connected account: ${accounts[0]}`);
-            document.getElementById("connectButton").disabled = true;
+            $("#connectButton").attr("disabled", true);
             aAccounts = accounts;
             ERC721Contract = new web3.eth.Contract(contractAbi, contractAddress);
             await contractInfo();
@@ -419,7 +416,6 @@ async function contractInfo() {
         let Symbol = await ERC721Contract.methods.symbol().call();
 
         let Balance = await ERC721Contract.methods.balanceOf(aAccounts[0]).call();
-
 
         $("#tokenName").html(`Token Name: ${TokenName}`);
         $("#tokenSymbol").html(`Token Symbol: ${Symbol}`);
@@ -503,6 +499,43 @@ async function burnToken() {
         } else {
             //alert((err.message).slice(0, 45))
             const msg = (err.message).slice(0, 45);
+            Swal.fire({
+                icon: 'error',
+                title: 'Transaction Fail',
+                text: msg,
+            })
+            console.log(err);
+        }
+    }
+}
+
+async function ownerOfToken() {
+    try {
+        if (!aAccounts) await connect();
+
+        const tokenId = $("#BOTokenId").val();
+
+        if (!emptyInputValidation(tokenId,)) return
+        if (!inputAmountvalidation(tokenId)) return
+
+        let owner = await ERC721Contract.methods.ownerOf(tokenId).call();
+        Swal.fire({
+            //icon: 'error',
+            title: 'owner is',
+            text: owner,
+        })
+
+    } catch (err) {
+        if (err.message.includes("User denied")) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Transaction Fail',
+                text: 'You rejected the transaction on Metamask!',
+            })
+            console.log("You rejected the transaction on Metamask!")
+        } else {
+            //alert((err.message).slice(0, 65))
+            const msg = (err.message).slice(0, 73);
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
@@ -635,17 +668,14 @@ async function setApprovalForAllToken() {
     }
 }
 
-
-
-
-
-
 async function transferFromToken() {
     try {
         if (!aAccounts) await connect();
+
         const senderAdd = $("#TFSender").val();
         const receiverAdd = $("#TFReceiver").val();
         const tokenId = $("#TFTokenId").val();
+
         if (!addressValidation(senderAdd)) return
         if (!addressValidation(receiverAdd)) return
         if (!emptyInputValidation(tokenId,)) return
@@ -657,6 +687,7 @@ async function transferFromToken() {
                 text: 'sender and receiver are same',
             })
         }
+
         nGasUsed = await ERC721Contract.methods
             .transferFrom(senderAdd, receiverAdd, tokenId)
             .estimateGas({ from: aAccounts[0] }, function () { });
@@ -664,7 +695,9 @@ async function transferFromToken() {
 
         await ERC721Contract.methods.transferFrom(senderAdd, receiverAdd, tokenId).send({ from: aAccounts[0] });
         console.log("token transfer successfully");
+
         contractInfo();
+
         Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -680,6 +713,7 @@ async function transferFromToken() {
                 title: 'Transaction Fail',
                 text: 'You rejected the transaction on Metamask!',
             })
+
             console.log("You rejected the transaction on Metamask!")
         } else {
             //alert((err.message).slice(0, 59))
@@ -750,15 +784,8 @@ async function safeTransferFromToken() {
     }
 }
 
-
-
-
-
-
-
-
 function addressValidation(receiver) {
-    if (!Web3.utils.isAddress(receiver)) {
+    if (!web3.utils.isAddress(receiver)) {
         // $(sErrorMsg).text("invalid address");
         //window.alert("invalid address");
         Swal.fire({
@@ -792,7 +819,7 @@ function inputAmountvalidation(nAmount) {
 }
 
 function emptyInputValidation(sInput) {
-    if (sInput.length == 0) {
+    if (!sInput.length) {
         // $(sErrorMsg).text("we can't proceed with empty value");
         // window.alert("we can't proceed with empty value")
         // $("label").show();

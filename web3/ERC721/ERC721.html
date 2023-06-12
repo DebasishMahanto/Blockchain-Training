@@ -15,7 +15,7 @@
         crossorigin="anonymous"></script>
     <script src="ERC721.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="style721.css">
+    <!-- <link rel="stylesheet" href="style721.css"> -->
 
 </head>
 
@@ -34,12 +34,17 @@
     <br>
     <br>
 
-    <input type="number" id="burnId" placeholder="enter token ID">
+    <input type="number" id="burnId" placeholder="Enter token ID">
     <button onclick="burnToken()">Burn</button>
     <br>
     <br>
 
-    <input type="text" id="SAFASpender" placeholder="enter spender address">
+    <input type="number" id="BOTokenId" placeholder="Enter token ID">
+    <button onclick="ownerOfToken()">Check owner</button>
+    <br>
+    <br>
+
+    <input type="text" id="SAFASpender" placeholder="Enter spender address">
     <label>
         Approve
         <input type="radio" name="IsApprovedForAll" value="true" />
@@ -48,26 +53,26 @@
         Revoke
         <input type="radio" name="IsApprovedForAll" value="false" />
     </label>
-    <button onclick="setApprovalForAllToken()">approve/revoke for all</button>
+    <button onclick="setApprovalForAllToken()">Approve/Revoke for all</button>
     <br>
     <br>
 
-    <input type="text" id="approveSpender" placeholder="enter spender address">
-    <input type="number" id="approveTokenId" placeholder="enter token ID">
-    <button onclick="approveToken()">approve</button>
+    <input type="text" id="approveSpender" placeholder="Enter spender address">
+    <input type="number" id="approveTokenId" placeholder="Enter token ID">
+    <button onclick="approveToken()">Approve</button>
     <br>
     <br>
 
-    <input type="text" id="TFSender" placeholder="enter sender address">
-    <input type="text" id="TFReceiver" placeholder="enter receiver address">
-    <input type="number" id="TFTokenId" placeholder="enter token ID">
+    <input type="text" id="TFSender" placeholder="Enter sender address">
+    <input type="text" id="TFReceiver" placeholder="Enter receiver address">
+    <input type="number" id="TFTokenId" placeholder="Enter token ID">
     <button onclick="transferFromToken()">Transfer</button>
     <br>
     <br>
 
-    <input type="text" id="STFSender" placeholder="enter sender address">
-    <input type="text" id="STFReceiver" placeholder="enter receiver address">
-    <input type="number" id="STFTokenId" placeholder="enter token ID">
+    <input type="text" id="STFSender" placeholder="Enter sender address">
+    <input type="text" id="STFReceiver" placeholder="Enter receiver address">
+    <input type="number" id="STFTokenId" placeholder="Enter token ID">
     <button onclick="safeTransferFromToken()">Safe Transfer</button>
     <br>
     <br>
