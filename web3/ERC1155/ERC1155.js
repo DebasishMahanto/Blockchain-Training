@@ -423,32 +423,17 @@ async function connect() {
             reject("Metamask not found");
         }
         web3 = new Web3(window.ethereum);
-        chainId = await web3.eth.getChainId();
-
         web3.eth.requestAccounts().then(async function (accounts) {
             console.log("connected to metamask");
             console.log("user account:", accounts[0]);
 
             $("#confirmation").html(`Connected successfully`);
             $("#account").html(`Connected account: ${accounts[0]}`);
-            $("#connectButton").attr("disabled", true);
 
             aAccounts = accounts;
             ERC1155Contract = new web3.eth.Contract(contractAbi, contractAddress);
 
         })
-
-        await checkNetwork();
-
-        // if (chainId !== sepoliaChainId) {
-        //     let newChainId = "0x" + sepoliaChainId.toString(16);
-        //     await window.ethereum.request({
-        //         method: "wallet_switchEthereumChain",
-        //         params: [{ chainId: newChainId }],
-        //     });
-        // } else {
-        //     $("#network").text("ChainId: " + chainId);
-        // }
 
         web3.eth.currentProvider.on("accountsChanged", function (accounts) {
             if (accounts.length === 0) {
@@ -466,6 +451,16 @@ async function connect() {
             $("#network").text("ChainId: " + newChainId);
         });
 
+        $("#connectButton").text("Disconnect MetaMask");
+        $("#connectButton").unbind("click", function () {
+            connect();
+        });
+        setTimeout(() => {
+            $("#connectButton").bind("click", function () {
+                disconnect();
+            });
+        }, 1000);
+
         resolve(true);
 
     }).catch(error => {
@@ -474,12 +469,18 @@ async function connect() {
             title: 'Metamask not found',
             text: 'install metamask',
         })
+        console.log(error);
     })
+}
+
+function disconnect() {
+    location.reload();
 }
 
 async function balanceOfToken() {
     try {
-        await checkNetwork();
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
 
         const owner = $("#BOOwnerAdd").val();
@@ -497,11 +498,19 @@ async function balanceOfToken() {
         })
 
     } catch (err) {
-        const msg = (err.message).slice(0, 73);
+
+        let oErrorJSON = JSON.parse(
+            err.message.substr(
+                err.message.indexOf('{'),
+                err.message.lastIndexOf('}')
+            )
+        );
+
+        // const msg = (err.message).slice(0, 73);
         Swal.fire({
             icon: 'error',
             title: 'Transaction Fail',
-            text: msg,
+            text: oErrorJSON.originalError.message,
         })
         console.log(err);
     }
@@ -510,8 +519,10 @@ async function balanceOfToken() {
 
 async function mintToken() {
     try {
-        await checkNetwork();
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+
         $(".my-button").prop("disabled", true);
 
         Swal.fire({
@@ -556,10 +567,17 @@ async function mintToken() {
             $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
+
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: err,
+                text: oErrorJSON.originalError.message,
             })
             console.log(err);
             $(".my-button").prop("disabled", false);
@@ -569,8 +587,10 @@ async function mintToken() {
 
 async function mintBatchToken() {
     try {
-        await checkNetwork();
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+
         $(".my-button").prop("disabled", true);
 
         Swal.fire({
@@ -589,13 +609,6 @@ async function mintBatchToken() {
 
         const tokenIds = tokenIdsInput.split(',').map(Number);
         const quantities = quantitiesInput.split(',').map(Number);
-
-        // const array1Error = $("#array1Error").val();
-        // const array2Error = $("#array2Error").val();
-
-
-        // array1Error.textContent = '';
-        // array2Error.textContent = '';
 
         if (!isValidArray(tokenIdsInput)) {
             Swal.fire({
@@ -621,7 +634,19 @@ async function mintBatchToken() {
             return;
         }
 
+        if (!checkQuantities(quantities)) return;
+        if (tokenIds.length != quantities.length) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid input',
+                text: "ids and quantity length mismatched",
+            })
 
+            console.log("ids and quantity length mismatched")
+            $(".my-button").prop("disabled", false);
+            return;
+
+        }
 
         console.log('Array 1:', tokenIds);
         console.log('Array 2:', quantities);
@@ -650,20 +675,19 @@ async function mintBatchToken() {
             })
             $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
-        } else if (err.message.includes("ids and amounts length mismatch")) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Transaction Fail',
-                text: 'ids and amounts length mismatch',
-            })
-            $(".my-button").prop("disabled", false);
-            console.log("ids and amounts length mismatch")
         }
         else {
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
+
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: err,
+                text: oErrorJSON.originalError.message,
             })
             $(".my-button").prop("disabled", false);
             console.log(err);
@@ -673,7 +697,8 @@ async function mintBatchToken() {
 
 async function burnBatchToken() {
     try {
-        await checkNetwork();
+        if (!checkNetwork()) return;
+
         $(".my-button").prop("disabled", true);
         if (!aAccounts) await connect();
 
@@ -718,6 +743,19 @@ async function burnBatchToken() {
         const tokenIds = tokenIdsInput.split(',').map(Number);
         const quantities = quantitiesInput.split(',').map(Number);
 
+        if (tokenIds.length != quantities.length) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid input',
+                text: "ids and quantity length mismatched",
+            })
+
+            console.log("ids and quantity length mismatched")
+            $(".my-button").prop("disabled", false);
+            return;
+
+        }
+
         console.log('Array 1:', tokenIds);
         console.log('Array 2:', quantities);
 
@@ -746,10 +784,18 @@ async function burnBatchToken() {
             console.log("You rejected the transaction on Metamask!")
             $(".my-button").prop("disabled", false);
         } else {
+
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
+
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: err,
+                text: oErrorJSON.originalError.message,
             })
             $(".my-button").prop("disabled", false);
             console.log(err);
@@ -759,7 +805,8 @@ async function burnBatchToken() {
 
 async function burnToken() {
     try {
-        await checkNetwork();
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
         $(".my-button").prop("disabled", true);
 
@@ -805,10 +852,17 @@ async function burnToken() {
             $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
+
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: err,
+                text: oErrorJSON.originalError.message,
             })
             $(".my-button").prop("disabled", false);
             console.log(err);
@@ -818,7 +872,8 @@ async function burnToken() {
 
 async function setApprovalForAllToken() {
     try {
-        await checkNetwork();
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
         $(".my-button").prop("disabled", true);
 
@@ -832,19 +887,10 @@ async function setApprovalForAllToken() {
 
         const spenderAdd = $("#SAFASpender").val();
         const IsApproved = $("input[name='IsApprovedForAll']:checked").val() === "true" ? true : false;
-        let radioButtons = document.querySelectorAll('input[name="IsApprovedForAll"]');
 
         if (!emptyInputValidation(spenderAdd)) return
         if (!addressValidation(spenderAdd)) return
-        if (!radioButtons[0].checked && !radioButtons[1].checked) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Select Option',
-                text: 'select approve or revoke as your need',
-            })
-            $(".my-button").prop("disabled", false);
-            return;
-        }
+
         if (aAccounts[0] == spenderAdd) {
             Swal.fire({
                 icon: 'error',
@@ -857,7 +903,7 @@ async function setApprovalForAllToken() {
 
         nGasUsed = await ERC1155Contract.methods
             .setApprovalForAll(spenderAdd, IsApproved)
-            .estimateGas({ from: aAccounts[0] }, function () { });
+            .estimateGas({ from: aAccounts[0] });
         console.log(nGasUsed);
 
         await ERC1155Contract.methods.setApprovalForAll(spenderAdd, IsApproved).send({ from: aAccounts[0] });
@@ -881,11 +927,18 @@ async function setApprovalForAllToken() {
             $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            const msg = (err.message).slice(0, 73);
+            // const msg = (err.message).slice(0, 73);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
+
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
             $(".my-button").prop("disabled", false);
             console.log(err);
@@ -895,7 +948,8 @@ async function setApprovalForAllToken() {
 
 async function safeTransferFromToken() {
     try {
-        await checkNetwork();
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
         $(".my-button").prop("disabled", true);
 
@@ -954,11 +1008,17 @@ async function safeTransferFromToken() {
             $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            const msg = (err.message).slice(0, 73);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
+
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
             $(".my-button").prop("disabled", false);
             console.log(err);
@@ -968,7 +1028,8 @@ async function safeTransferFromToken() {
 
 async function safeBatchTransferFromToken() {
     try {
-        await checkNetwork();
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
         $(".my-button").prop("disabled", true);
 
@@ -1029,6 +1090,19 @@ async function safeBatchTransferFromToken() {
         const tokenIds = tokenIdsInput.split(',').map(Number);
         const quantities = quantitiesInput.split(',').map(Number);
 
+        if (tokenIds.length != quantities.length) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid input',
+                text: "ids and quantity length mismatched",
+            })
+
+            console.log("ids and quantity length mismatched")
+            $(".my-button").prop("disabled", false);
+            return;
+
+        }
+
         console.log('Array 1:', tokenIds);
         console.log('Array 2:', quantities);
 
@@ -1058,11 +1132,16 @@ async function safeBatchTransferFromToken() {
             $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            const msg = (err.message).slice(0, 73);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
             $(".my-button").prop("disabled", false);
             console.log(err);
@@ -1121,14 +1200,47 @@ function isValidArray(input) {
 }
 
 async function checkNetwork() {
-    if (chainId !== sepoliaChainId) {
-        let newChainId = "0x" + sepoliaChainId.toString(16);
-        await window.ethereum.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: newChainId }],
-        });
-    } else {
-        $("#network").text("ChainId: " + chainId);
+    try {
+        chainId = await web3.eth.getChainId();
+
+        if (chainId !== sepoliaChainId) {
+            let newChainId = "0x" + sepoliaChainId.toString(16);
+            await window.ethereum.request({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId: newChainId }],
+            });
+            return true;
+        } else {
+            $("#network").text("ChainId: " + chainId);
+            return true;
+        }
+    } catch (error) {
+        console.log("Error:", error);
+        if (error.code === 4001) {
+            console.log(error.code);
+            Swal.fire({
+                icon: "warning",
+                title:
+                    "you have changed your Network to another. Please select sepolia ",
+            });
+            return false;
+        }
     }
+
+}
+
+function checkQuantities(array) {
+    console.log("hhhhh");
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] == 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid input',
+                text: "you enterd zero quantity",
+            })
+            return false;
+        }
+    }
+    return true;
 
 }

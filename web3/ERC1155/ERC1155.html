@@ -45,12 +45,13 @@
 
     <form>
         <label>Mint Batch Token</label><br>
-        <label for="arrayIds">Enter token id (separated by commas):</label>
-        <input type="text" id="arrayIds" name="arrayIds" required pattern="^\d+(,\d+)*$">
+        <!-- <label for="arrayIds">Enter token id (separated by commas):</label> -->
+        <input type="text" id="arrayIds" name="arrayIds" placeholder="Enter token id (separated by commas)">
         <!-- <span id="array1Error" style="color: red;"></span> -->
 
-        <label for="arrayQuantities">Enter quantity (separated by commas):</label>
-        <input type="text" id="arrayQuantities" name="arrayQuantities" required pattern="^\d+(,\d+)*$">
+        <!-- <label for="arrayQuantities">Enter quantity (separated by commas):</label> -->
+        <input type="text" id="arrayQuantities" name="arrayQuantities"
+            placeholder="Enter quantity (separated by commas)">
         <!-- <span id="array2Error" style="color: red;"></span> -->
 
         <button type="button" class="my-button" onclick="mintBatchToken()">Mint Batch</button>
@@ -66,10 +67,11 @@
     <br>
 
     <label>Burn Batch Token</label><br>
-    <label for="BBarrayIds">Enter token id (separated by commas):</label>
-    <input type="text" id="BBarrayIds" name="BBarrayIds"><br>
-    <label for="BBarrayQuantities">Enter quantity (separated by commas):</label>
-    <input type="text" id="BBarrayQuantities" name="BBarrayQuantities">
+    <!-- <label for="BBarrayIds">Enter token id (separated by commas):</label> -->
+    <input type="text" id="BBarrayIds" name="BBarrayIds" placeholder="Enter token id (separated by commas)"><br>
+    <!-- <label for="BBarrayQuantities">Enter quantity (separated by commas):</label> -->
+    <input type="text" id="BBarrayQuantities" name="BBarrayQuantities"
+        placeholder="Enter quantity (separated by commas)">
     <button type="button" class="my-button" onclick="burnBatchToken()">Burn Batch</button>
     <br>
     <br>
@@ -78,12 +80,12 @@
     <input type="text" id="SAFASpender" placeholder="Enter spender address">
     <label>
         Approve
-        <input type="radio" name="IsApprovedForAll" value="true" />
+        <input type="radio" name="IsApprovedForAll" value="true" checked />
     </label>
     <label>
         Revoke
         <input type="radio" name="IsApprovedForAll" value="false" />
-    </label>
+    </label><br>
     <button type="button" type="button" onclick="setApprovalForAllToken()">Approve/Revoke for all</button>
     <br>
     <br>
@@ -102,10 +104,11 @@
     <label>Safe Batch Transfer From</label><br>
     <input type="text" id="SBTFSender" placeholder="Enter sender address">
     <input type="text" id="SBTFReceiver" placeholder="Enter receiver address"><br>
-    <label for="SBTFarrayIds">Enter token id (separated by commas):</label>
-    <input type="text" id="SBTFarrayIds" name="SBTFarrayIds"><br>
-    <label for="SBTFarrayQuantities">Enter quantity (separated by commas):</label>
-    <input type="text" id="SBTFarrayQuantities" name="SBTFarrayQuantities">
+    <!-- <label for="SBTFarrayIds">Enter token id (separated by commas):</label> -->
+    <input type="text" id="SBTFarrayIds" name="SBTFarrayIds" placeholder="Enter token id (separated by commas)"><br>
+    <!-- <label for="SBTFarrayQuantities">Enter quantity (separated by commas):</label> -->
+    <input type="text" id="SBTFarrayQuantities" name="SBTFarrayQuantities"
+        placeholder="Enter quantity (separated by commas)">
     <button type="button" class="my-button" onclick="safeBatchTransferFromToken()">Safe Batch Transfer</button>
 
 

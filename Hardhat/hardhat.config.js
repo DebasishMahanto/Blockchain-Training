@@ -30,7 +30,7 @@ module.exports = {
     runOnCompile: true,
     clear: true,
     flat: true,
-    only: [':ERC1155Update$'],
+    only: [':Token721$'],
     spacing: 2,
     pretty: false,
     // format: "minimal",
