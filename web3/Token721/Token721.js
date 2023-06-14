@@ -2,8 +2,9 @@ let web3;
 let aAccounts;
 let nGasUsed;
 let ERC721Contract;
+let chainId;
 let sepoliaChainId = 11155111;
-const contractAddress = "0xf6C356356d3d4fAB1C93f64393164beFDD09E9Ea";
+const contractAddress = "0x4d61de165F281C890cb458Ba5b216bA2Cc52FAAA";
 const contractAbi = [
     {
         "inputs": [
@@ -181,6 +182,30 @@ const contractAbi = [
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "balances",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
                 "name": "tokenId",
                 "type": "uint256"
@@ -205,6 +230,44 @@ const contractAbi = [
                 "internalType": "address",
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_owner",
+                "type": "address"
+            }
+        ],
+        "name": "getBalances",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "name": "givenURI",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
             }
         ],
         "stateMutability": "view",
@@ -426,6 +489,7 @@ const contractAbi = [
 
 
 
+
 async function connect() {
     return new Promise(async (resolve, reject) => {
         if (!window.ethereum) {
@@ -437,8 +501,7 @@ async function connect() {
             console.log("connected to metamask");
             console.log("user account:", accounts[0]);
 
-            $("#confirmation").html(`Connected successfully`);
-            $("#account").html(`Connected account: ${accounts[0]}`);
+
 
             aAccounts = accounts;
             ERC721Contract = new web3.eth.Contract(contractAbi, contractAddress);
@@ -451,7 +514,7 @@ async function connect() {
                 location.reload();
             } else {
                 aAccounts = accounts;
-                $("#account").text("Address: " + accounts[0]);
+                $("#account").text("Address: " + aAccounts[0]);
                 $("#confirmation").text('connected successfully');
                 await contractInfo();
 
@@ -496,18 +559,27 @@ function disconnect() {
 
 async function contractInfo() {
     try {
-        console.log(ERC721Contract);
         let TokenName = await ERC721Contract.methods.name().call();
         console.log(TokenName);
+
+        $("#showTokens").empty();
+
 
         let Symbol = await ERC721Contract.methods.symbol().call();
 
         let Balance = await ERC721Contract.methods.balanceOf(aAccounts[0]).call();
 
+        chainId = await web3.eth.getChainId();
+
+        let maxTId = await ERC721Contract.methods._tokenId().call();
+
+        $("#confirmation").html(`Connected successfully`);
+        $("#account").html(`Connected account: ${aAccounts[0]}`);
         $("#tokenName").html(`Token Name: ${TokenName}`);
         $("#tokenSymbol").html(`Token Symbol: ${Symbol}`);
         $("#balance").html(`My Balance: ${Balance}`);
-        let maxTId = await ERC721Contract.methods._tokenId().call();
+        $("#network").text("ChainId: " + chainId);
+        $("#totalMinted").text("Total token minted: " + maxTId);
         console.log(maxTId);
     } catch (error) {
         console.log(error);
@@ -517,14 +589,25 @@ async function contractInfo() {
 async function mintToken() {
     try {
         if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+
+        $(".my-button").prop("disabled", true);
 
         const tokenURI = $("#M-URI").val();
 
-
         if (!validateURI(tokenURI)) return;
 
-        if (!checkURI(tokenURI)) return;
+        if (checkURI(tokenURI)) return;
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Wait!!.. Trasaction is proceed',
+            showConfirmButton: false,
+            timer: 2000
+        })
+
 
         nGasUsed = await ERC721Contract.methods
             .mint(tokenURI)
@@ -535,12 +618,13 @@ async function mintToken() {
         console.log("minted successfully");
         contractInfo();
         Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
             title: 'Transaction Successfull',
             showConfirmButton: false,
             timer: 1500
         })
+        $(".my-button").prop("disabled", false);
     } catch (err) {
         if (err.message.includes("User denied")) {
             Swal.fire({
@@ -548,13 +632,24 @@ async function mintToken() {
                 title: 'Transaction Fail',
                 text: 'You rejected the transaction on Metamask!',
             })
+            $(".my-button").prop("disabled", false);
+
             console.log("You rejected the transaction on Metamask!")
         } else {
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
+
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: 'err',
+                text: oErrorJSON.originalError.message,
             })
+            $(".my-button").prop("disabled", false);
+
             console.log(err);
         }
     }
@@ -562,10 +657,23 @@ async function mintToken() {
 
 async function burnToken() {
     try {
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+
+        $(".my-button").prop("disabled", true);
+
         const tokenId = $("#burnId").val();
         if (!emptyInputValidation(tokenId,)) return
         if (!inputAmountvalidation(tokenId)) return
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Wait!!.. Trasaction is proceed',
+            showConfirmButton: false,
+            timer: 2000
+        })
 
         nGasUsed = await ERC721Contract.methods
             .burn(tokenId)
@@ -576,12 +684,14 @@ async function burnToken() {
         console.log("burn successfully");
         contractInfo();
         Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
             title: 'Transaction Successfull',
             showConfirmButton: false,
             timer: 1500
         })
+        $(".my-button").prop("disabled", false);
+
 
     } catch (err) {
         if (err.message.includes("User denied")) {
@@ -590,15 +700,21 @@ async function burnToken() {
                 title: 'Transaction Fail',
                 text: 'You rejected the transaction on Metamask!',
             })
+            $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            //alert((err.message).slice(0, 45))
-            const msg = (err.message).slice(0, 45);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
+            $(".my-button").prop("disabled", false);
             console.log(err);
         }
     }
@@ -606,7 +722,11 @@ async function burnToken() {
 
 async function ownerOfToken() {
     try {
+
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+        $(".my-button").prop("disabled", true);
 
         const tokenId = $("#BOTokenId").val();
 
@@ -615,10 +735,11 @@ async function ownerOfToken() {
 
         let owner = await ERC721Contract.methods.ownerOf(tokenId).call();
         Swal.fire({
-            //icon: 'error',
+
             title: 'owner is',
             text: owner,
         })
+        $(".my-button").prop("disabled", false);
 
     } catch (err) {
         if (err.message.includes("User denied")) {
@@ -627,15 +748,21 @@ async function ownerOfToken() {
                 title: 'Transaction Fail',
                 text: 'You rejected the transaction on Metamask!',
             })
+            $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            //alert((err.message).slice(0, 65))
-            const msg = (err.message).slice(0, 73);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
+            $(".my-button").prop("disabled", false);
             console.log(err);
         }
     }
@@ -643,21 +770,35 @@ async function ownerOfToken() {
 
 async function approveToken() {
     try {
+
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+
+        $(".my-button").prop("disabled", true);
+
         const spenderAdd = $("#approveSpender").val();
         const tokenId = $("#approveTokenId").val();
         if (!addressValidation(spenderAdd)) return
         if (!emptyInputValidation(tokenId,)) return
         if (!inputAmountvalidation(tokenId)) return
         if (aAccounts[0] == spenderAdd) {
-            //alert("you are the spender")
+
             Swal.fire({
                 icon: 'error',
                 title: 'Check Properly',
                 text: 'you are the spender',
             })
+            $(".my-button").prop("disabled", false);
             return
         }
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Wait!!.. Trasaction is proceed',
+            showConfirmButton: false,
+            timer: 2000
+        })
         nGasUsed = await ERC721Contract.methods
             .approve(spenderAdd, tokenId)
             .estimateGas({ from: aAccounts[0] }, function () { });
@@ -666,12 +807,13 @@ async function approveToken() {
         await ERC721Contract.methods.approve(spenderAdd, tokenId).send({ from: aAccounts[0] });
         console.log("token approved successfully");
         Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
             title: 'Transaction Successfull',
             showConfirmButton: false,
             timer: 1500
         })
+        $(".my-button").prop("disabled", false);
 
     } catch (err) {
         if (err.message.includes("User denied")) {
@@ -680,15 +822,21 @@ async function approveToken() {
                 title: 'Transaction Fail',
                 text: 'You rejected the transaction on Metamask!',
             })
+            $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            //alert((err.message).slice(0, 65))
-            const msg = (err.message).slice(0, 73);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
+            $(".my-button").prop("disabled", false);
             console.log(err);
         }
     }
@@ -697,26 +845,24 @@ async function approveToken() {
 
 async function setApprovalForAllToken() {
     try {
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+
+        $(".my-button").prop("disabled", true);
+
         const spenderAdd = $("#SAFASpender").val();
         const IsApproved = $("input[name='IsApprovedForAll']:checked").val() === "true" ? true : false;
-        let radioButtons = document.querySelectorAll('input[name="IsApprovedForAll"]');
         if (!addressValidation(spenderAdd)) return
-        if (!radioButtons[0].checked && !radioButtons[1].checked) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Select Option',
-                text: 'select approve or revoke as your need',
-            })
-            return;
-        }
+
         if (aAccounts[0] == spenderAdd) {
-            // alert("you are the spender")
+
             Swal.fire({
                 icon: 'error',
                 title: 'Check Properly',
                 text: 'you are the spender',
             })
+            $(".my-button").prop("disabled", false);
             return
         }
         if (await ERC721Contract.methods.balanceOf(aAccounts[0]).call() == 0) {
@@ -725,8 +871,16 @@ async function setApprovalForAllToken() {
                 title: 'FAIL!!',
                 text: 'you have no token for approve',
             })
+            $(".my-button").prop("disabled", false);
             return
         }
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Wait!!.. Trasaction is proceed',
+            showConfirmButton: false,
+            timer: 2000
+        })
         nGasUsed = await ERC721Contract.methods
             .setApprovalForAll(spenderAdd, IsApproved)
             .estimateGas({ from: aAccounts[0] }, function () { });
@@ -735,12 +889,13 @@ async function setApprovalForAllToken() {
         await ERC721Contract.methods.setApprovalForAll(spenderAdd, IsApproved).send({ from: aAccounts[0] });
         console.log("All token approved successfully");
         Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
             title: 'Transaction Successfull',
             showConfirmButton: false,
             timer: 1500
         })
+        $(".my-button").prop("disabled", false);
 
     } catch (err) {
         if (err.message.includes("User denied")) {
@@ -749,15 +904,21 @@ async function setApprovalForAllToken() {
                 title: 'Transaction Fail',
                 text: 'You rejected the transaction on Metamask!',
             })
+            $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            // alert((err.message).slice(0, 59))
-            const msg = (err.message).slice(0, 73);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
+            $(".my-button").prop("disabled", false);
             console.log(err);
         }
     }
@@ -765,7 +926,11 @@ async function setApprovalForAllToken() {
 
 async function transferFromToken() {
     try {
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+
+        $(".my-button").prop("disabled", true);
 
         const senderAdd = $("#TFSender").val();
         const receiverAdd = $("#TFReceiver").val();
@@ -781,7 +946,16 @@ async function transferFromToken() {
                 title: 'Check Properly',
                 text: 'sender and receiver are same',
             })
+            $(".my-button").prop("disabled", false);
+            return;
         }
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Wait!!.. Trasaction is proceed',
+            showConfirmButton: false,
+            timer: 2000
+        })
 
         nGasUsed = await ERC721Contract.methods
             .transferFrom(senderAdd, receiverAdd, tokenId)
@@ -794,12 +968,13 @@ async function transferFromToken() {
         contractInfo();
 
         Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
             title: 'Transaction Successfull',
             showConfirmButton: false,
             timer: 1500
         })
+        $(".my-button").prop("disabled", false);
 
     } catch (err) {
         if (err.message.includes("User denied")) {
@@ -808,16 +983,21 @@ async function transferFromToken() {
                 title: 'Transaction Fail',
                 text: 'You rejected the transaction on Metamask!',
             })
-
+            $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            //alert((err.message).slice(0, 59))
-            const msg = (err.message).slice(0, 73);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
+            $(".my-button").prop("disabled", false);
             console.log(err);
         }
     }
@@ -825,7 +1005,13 @@ async function transferFromToken() {
 
 async function safeTransferFromToken() {
     try {
+
+        if (!checkNetwork()) return;
+
         if (!aAccounts) await connect();
+
+        $(".my-button").prop("disabled", true);
+
         const senderAdd = $("#STFSender").val();
         const receiverAdd = $("#STFReceiver").val();
         const tokenId = $("#STFTokenId").val();
@@ -834,14 +1020,21 @@ async function safeTransferFromToken() {
         if (!emptyInputValidation(tokenId,)) return
         if (!inputAmountvalidation(tokenId)) return
         if (senderAdd == receiverAdd) {
-            // alert("sender and receiver are same")
             Swal.fire({
                 icon: 'error',
                 title: 'Check Properly',
                 text: 'sender and receiver are same',
             })
+            $(".my-button").prop("disabled", false);
             return
         }
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Wait!!.. Trasaction is proceed',
+            showConfirmButton: false,
+            timer: 2000
+        })
         nGasUsed = await ERC721Contract.methods
             .safeTransferFrom(senderAdd, receiverAdd, tokenId)
             .estimateGas({ from: aAccounts[0] }, function () { });
@@ -851,12 +1044,13 @@ async function safeTransferFromToken() {
         console.log("token transfer successfully");
         contractInfo();
         Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
             title: 'Transaction Successfull',
             showConfirmButton: false,
             timer: 1500
         })
+        $(".my-button").prop("disabled", false);
 
     } catch (err) {
         if (err.message.includes("User denied")) {
@@ -865,34 +1059,115 @@ async function safeTransferFromToken() {
                 title: 'Transaction Fail',
                 text: 'You rejected the transaction on Metamask!',
             })
+            $(".my-button").prop("disabled", false);
             console.log("You rejected the transaction on Metamask!")
         } else {
-            // alert((err.message).slice(0, 59))
-            const msg = (err.message).slice(0, 73);
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
             Swal.fire({
                 icon: 'error',
                 title: 'Transaction Fail',
-                text: msg,
+                text: oErrorJSON.originalError.message,
             })
+            $(".my-button").prop("disabled", false);
             console.log(err);
         }
     }
 }
 
 async function showToken() {
-    let maxTId = await ERC721Contract.methods._tokenId().call();
+    try {
+        let uri
+        let id;
+        if (!checkNetwork()) return;
 
-    for (let id = 0; id <= maxTId; id++) {
-        try {
-            let owner = await ERC721Contract.methods.ownerOf(id).call();
-            let uri = await ERC721Contract.methods.tokenURI(id).call();
-            if (owner == aAccounts[0]) {
-                $("#showTokens").append(`<img src=${uri} class="card-img-top" alt="..." style= width:25%>`);
+        if (!aAccounts) await connect();
 
-            }
-        } catch (err) {
-            continue;
+        let Balance = await ERC721Contract.methods.balanceOf(aAccounts[0]).call();
+        if (Balance == 0) {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'You have no NFT ',
+            })
+            $(".my-button").prop("disabled", false);
+            return;
         }
+
+        $(".my-button").prop("disabled", true);
+        $("#showTokens").empty();
+
+
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Wait!!.. your NFT will listed bellow',
+            showConfirmButton: false,
+            timer: 2000
+        })
+
+        let myTokens = await ERC721Contract.methods.getBalances(aAccounts[0]).call();
+
+        for (let count = 0; count < myTokens.length; count++) {
+            try {
+                id = myTokens[count];
+
+                uri = await ERC721Contract.methods.tokenURI(id).call();
+
+                let response = await fetch(uri);
+                let jsonData = await response.json();
+
+                $("#showTokens").append(
+                    `<div id=${id} class="card" style="width: 18rem;">
+                    <img src="${jsonData.image}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">ID: ${id}</h5>
+                      <h5 class="card-title">Name: ${jsonData.name}</h5>
+                      <p class="card-text">Description: ${jsonData.description}</p>
+                      
+                    </div>
+                  </div>`
+                );
+
+
+
+            } catch (err) {
+                console.log(err);
+                continue;
+            }
+        }
+        $(".my-button").prop("disabled", false);
+    } catch (err) {
+        if (err.message.includes("User denied")) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Transaction Fail',
+                text: 'You rejected the transaction on Metamask!',
+            })
+            $(".my-button").prop("disabled", false);
+            console.log("You rejected the transaction on Metamask!")
+        } else {
+
+            let oErrorJSON = JSON.parse(
+                err.message.substr(
+                    err.message.indexOf('{'),
+                    err.message.lastIndexOf('}')
+                )
+            );
+            Swal.fire({
+                icon: 'error',
+                title: 'Transaction Fail',
+                text: oErrorJSON.originalError.message,
+            })
+            $(".my-button").prop("disabled", false);
+            console.log(err);
+        }
+
     }
 
 
@@ -902,13 +1177,13 @@ async function showToken() {
 
 function addressValidation(receiver) {
     if (!web3.utils.isAddress(receiver)) {
-        // $(sErrorMsg).text("invalid address");
-        //window.alert("invalid address");
+
         Swal.fire({
             icon: 'error',
             title: 'Invalid Address',
             text: 'enter valid address',
         })
+        $(".my-button").prop("disabled", false);
         return false;
     } else {
         return true;
@@ -918,16 +1193,13 @@ function addressValidation(receiver) {
 
 function inputAmountvalidation(nAmount) {
     if (isNaN(nAmount) || nAmount < 0 || !nAmount) {
-        // $(sErrorMsg).text(
-        //     "Entered value is not a number. Please check again properly"
-        // );
-        //window.alert("entered value is not number");
-        //$("label").show();
+
         Swal.fire({
             icon: 'error',
             title: 'Value is not number',
             text: 'enter valid number',
         })
+        $(".my-button").prop("disabled", false);
         return false;
     } else {
         return true;
@@ -936,14 +1208,13 @@ function inputAmountvalidation(nAmount) {
 
 function emptyInputValidation(sInput) {
     if (!sInput.length) {
-        // $(sErrorMsg).text("we can't proceed with empty value");
-        // window.alert("we can't proceed with empty value")
-        // $("label").show();
+
         Swal.fire({
             icon: 'error',
             title: 'Empty value',
             text: 'we cant proceed with empty value',
         })
+        $(".my-button").prop("disabled", false);
         return false;
     } else {
         return true;
@@ -960,26 +1231,27 @@ function validateURI(uri) {
             title: 'Invalid URI',
             text: 'Enter valid URI',
         })
+        $(".my-button").prop("disabled", false);
         return false; // URI is invalid
     }
 }
 
 async function checkURI(_tokenURI) {
 
-    let maxTId = await ERC721Contract.methods._tokenId().call();
+    if (!await ERC721Contract.methods.givenURI(_tokenURI).call()) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid URI',
+            text: 'URI exist in another token',
+        })
+        $(".my-button").prop("disabled", false);
+        return true;
 
-    for (let id = 1; id <= maxTId; i++) {
-        if (await ERC721Contract.methods.tokenURI(id).call() == _tokenURI) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Invalid URI',
-                text: 'URI exist in another token',
-            })
-            return false;
-
-        }
     }
-    return true;
+    else {
+        return false;
+    }
+
 }
 
 

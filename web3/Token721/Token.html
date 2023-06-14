@@ -15,7 +15,7 @@
         crossorigin="anonymous"></script>
     <script src="Token721.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- <link rel="stylesheet" href="ERC1155.css"> -->
+    <link rel="stylesheet" href="Token.css">
 
 </head>
 
@@ -29,57 +29,68 @@
     <p id="tokenSymbol"></p>
     <p id="balance"></p>
     <p id="network"></p>
+    <p id="totalMinted"></p>
 
     <input type="text" id="M-URI" placeholder="Enter Token URI">
-    <button onclick="mintToken()">Mint</button>
+    <button type="button" class="my-button" onclick="mintToken()">Mint</button>
     <br>
     <br>
 
     <input type="number" id="burnId" placeholder="Enter token ID">
-    <button onclick="burnToken()">Burn</button>
+    <button type="button" class="my-button" onclick="burnToken()">Burn</button>
     <br>
     <br>
 
     <input type="number" id="BOTokenId" placeholder="Enter token ID">
-    <button onclick="ownerOfToken()">Check owner</button>
+    <button type="button" class="my-button" onclick="ownerOfToken()">Check owner</button>
     <br>
     <br>
 
     <input type="text" id="SAFASpender" placeholder="Enter spender address">
     <label>
         Approve
-        <input type="radio" name="IsApprovedForAll" value="true" />
+        <input type="radio" name="IsApprovedForAll" value="true" checked />
     </label>
     <label>
         Revoke
         <input type="radio" name="IsApprovedForAll" value="false" />
-    </label>
-    <button onclick="setApprovalForAllToken()">Approve/Revoke for all</button>
+    </label><br>
+    <button type="button" class="my-button" onclick="setApprovalForAllToken()">Approve/Revoke for all</button>
     <br>
     <br>
 
     <input type="text" id="approveSpender" placeholder="Enter spender address">
     <input type="number" id="approveTokenId" placeholder="Enter token ID">
-    <button onclick="approveToken()">Approve</button>
+    <button type="button" class="my-button" onclick="approveToken()">Approve</button>
     <br>
     <br>
 
     <input type="text" id="TFSender" placeholder="Enter sender address">
     <input type="text" id="TFReceiver" placeholder="Enter receiver address">
     <input type="number" id="TFTokenId" placeholder="Enter token ID">
-    <button onclick="transferFromToken()">Transfer</button>
+    <button type="button" class="my-button" onclick="transferFromToken()">Transfer</button>
     <br>
     <br>
 
     <input type="text" id="STFSender" placeholder="Enter sender address">
     <input type="text" id="STFReceiver" placeholder="Enter receiver address">
     <input type="number" id="STFTokenId" placeholder="Enter token ID">
-    <button onclick="safeTransferFromToken()">Safe Transfer</button>
+    <button type="button" class="my-button" onclick="safeTransferFromToken()">Safe Transfer</button>
     <br>
     <br>
 
-    <button onclick="showToken()">view NFT</button>
-    <div id="showTokens"></div>
+    <button type="button" class="my-button" onclick="showToken()">View NFT</button>
+    <div id="showTokens" class="d-flex justify-content-center"></div>
+
+    <!-- <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="..." alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div> -->
 
 
 
