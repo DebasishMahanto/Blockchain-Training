@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Token1155</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.0/dist/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="Token1155.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="Token1155.css" />
+  </head>
+
+  <body>
+    <h1>Token1155</h1>
+    <button
+      type="button"
+      class="btn btn-success"
+      id="connectButton"
+      onclick="connect()"
+    >
+      Connect Metamask
+    </button>
+    <br />
+    <p id="confirmation"></p>
+    <p id="account"></p>
+    <!-- <p id="tokenName"></p>
+    <p id="tokenSymbol"></p> -->
+    <p id="totalTokenMintedId"></p>
+
+    <label>Check Balance</label><br />
+    <input type="text" id="BOOwnerAdd" placeholder="Token owner address" />
+    <input type="number" id="BOTokenId" placeholder="Enter token ID" />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="balanceOfToken()"
+    >
+      Check Balance
+    </button>
+    <br />
+    <br />
+
+    <label>Mint Token</label><br />
+    <input type="number" id="MTokenId" placeholder="Enter token ID" />
+    <input type="number" id="MQuantity" placeholder="Enter quantity" />
+    <input type="text" id="M-URI" placeholder="Enter Token URI" />
+    <button type="button" class="btn btn-primary button" onclick="mintToken()">
+      Mint
+    </button>
+    <br />
+    <br />
+
+    <form>
+      <label>Mint Batch Token</label><br />
+      <input
+        type="text"
+        id="arrayIds"
+        name="arrayIds"
+        placeholder="Enter token id (separated by commas)"
+      />
+
+      <input
+        type="text"
+        id="arrayQuantities"
+        name="arrayQuantities"
+        placeholder="Enter quantity (separated by commas)"
+      />
+
+      <input
+        type="text"
+        id="arrayURIes"
+        name="arrayURIes"
+        placeholder="Enter URIes (separated by commas)"
+      />
+
+      <button
+        type="button"
+        class="btn btn-primary button"
+        onclick="mintBatchToken()"
+      >
+        Mint Batch
+      </button>
+      <br />
+      <br />
+    </form>
+
+    <label>Burn Token</label><br />
+    <input type="number" id="BTokenId" placeholder="Enter token ID" />
+    <input type="number" id="BQuantity" placeholder="Enter quantity" />
+    <button type="button" class="btn btn-primary button" onclick="burnToken()">
+      Burn
+    </button>
+    <br />
+    <br />
+
+    <label>Burn Batch Token</label><br />
+    <!-- <label for="BBarrayIds">Enter token id (separated by commas):</label> -->
+    <input
+      type="text"
+      id="BBarrayIds"
+      name="BBarrayIds"
+      placeholder="Enter token id (separated by commas)"
+    /><br />
+    <!-- <label for="BBarrayQuantities">Enter quantity (separated by commas):</label> -->
+    <input
+      type="text"
+      id="BBarrayQuantities"
+      name="BBarrayQuantities"
+      placeholder="Enter quantity (separated by commas)"
+    />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="burnBatchToken()"
+    >
+      Burn Batch
+    </button>
+    <br />
+    <br />
+
+    <label>Set Approval</label><br />
+    <input type="text" id="SAFASpender" placeholder="Enter spender address" />
+    <label>
+      Approve
+      <input type="radio" name="IsApprovedForAll" value="true" checked />
+    </label>
+    <label>
+      Revoke
+      <input type="radio" name="IsApprovedForAll" value="false" /> </label
+    ><br />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="setApprovalForAllToken()"
+    >
+      Approve/Revoke for all
+    </button>
+    <br />
+    <br />
+
+    <label>Safe Transfer</label><br />
+    <input type="text" id="STFSender" placeholder="Enter sender address" />
+    <input type="text" id="STFReceiver" placeholder="Enter receiver address" />
+    <input type="number" id="STFTokenId" placeholder="Enter token ID" />
+    <input type="number" id="STFQuantity" placeholder="Enter quantity" />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="safeTransferFromToken()"
+    >
+      Safe Transfer
+    </button>
+    <br />
+    <br />
+
+    <label>Safe Batch Transfer From</label><br />
+    <input type="text" id="SBTFSender" placeholder="Enter sender address" />
+    <input
+      type="text"
+      id="SBTFReceiver"
+      placeholder="Enter receiver address"
+    /><br />
+    <!-- <label for="SBTFarrayIds">Enter token id (separated by commas):</label> -->
+    <input
+      type="text"
+      id="SBTFarrayIds"
+      name="SBTFarrayIds"
+      placeholder="Enter token id (separated by commas)"
+    /><br />
+    <!-- <label for="SBTFarrayQuantities">Enter quantity (separated by commas):</label> -->
+    <input
+      type="text"
+      id="SBTFarrayQuantities"
+      name="SBTFarrayQuantities"
+      placeholder="Enter quantity (separated by commas)"
+    />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="safeBatchTransferFromToken()"
+    >
+      Safe Batch Transfer</button
+    ><br /><br />
+
+    <button type="button" class="btn btn-primary button" onclick="showToken()">
+      View NFT
+    </button>
+    <div id="showTokens" class="d-flex flex-w"></div>
+  </body>
+</html>

@@ -30,7 +30,7 @@ module.exports = {
     runOnCompile: true,
     clear: true,
     flat: true,
-    only: [':Token721$'],
+    only: [':Token1155$'],
     spacing: 2,
     pretty: false,
     // format: "minimal",

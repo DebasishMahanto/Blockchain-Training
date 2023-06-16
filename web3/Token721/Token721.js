@@ -487,9 +487,6 @@ const contractAbi = [
     }
 ]
 
-
-
-
 async function connect() {
     return new Promise(async (resolve, reject) => {
         if (!window.ethereum) {
@@ -500,8 +497,6 @@ async function connect() {
         web3.eth.requestAccounts().then(async function (accounts) {
             console.log("connected to metamask");
             console.log("user account:", accounts[0]);
-
-
 
             aAccounts = accounts;
             ERC721Contract = new web3.eth.Contract(contractAbi, contractAddress);
@@ -597,8 +592,9 @@ async function mintToken() {
         const tokenURI = $("#M-URI").val();
 
         if (!validateURI(tokenURI)) return;
+        // console.log(checkURI(tokenURI));
 
-        if (checkURI(tokenURI)) return;
+        if (!await checkURI(tokenURI)) return;
 
         Swal.fire({
             position: 'center',
@@ -1238,18 +1234,18 @@ function validateURI(uri) {
 
 async function checkURI(_tokenURI) {
 
-    if (!await ERC721Contract.methods.givenURI(_tokenURI).call()) {
+    if (await ERC721Contract.methods.givenURI(_tokenURI).call()) {
         Swal.fire({
             icon: 'error',
             title: 'Invalid URI',
             text: 'URI exist in another token',
         })
         $(".my-button").prop("disabled", false);
-        return true;
+        return false;
 
     }
     else {
-        return false;
+        return true;
     }
 
 }

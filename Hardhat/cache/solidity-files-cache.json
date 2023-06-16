@@ -1137,6 +1137,81 @@
       "artifacts": [
         "Token721"
       ]
+    },
+    "C:\\Users\\DELL\\Desktop\\Blockchain Training\\Hardhat\\node_modules\\@openzeppelin\\contracts\\token\\ERC1155\\extensions\\ERC1155URIStorage.sol": {
+      "lastModificationDate": 1685339095614,
+      "contentHash": "6046dbdf9591874037a20159d431e11f",
+      "sourceName": "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../../utils/Strings.sol",
+        "../ERC1155.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC1155URIStorage"
+      ]
+    },
+    "C:\\Users\\DELL\\Desktop\\Blockchain Training\\Hardhat\\contracts\\Token1155.sol": {
+      "lastModificationDate": 1686853483335,
+      "contentHash": "b10a451f35c375f010bb0ed194c7f129",
+      "sourceName": "contracts/Token1155.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Token1155"
+      ]
     }
   }
 }

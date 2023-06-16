@@ -1,0 +1,70 @@
+/* Set general styles for the body */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Style the h1 heading */
+h1 {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Style the buttons */
+.btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.my-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.my-button:hover {
+    background-color: #45a049;
+}
+
+/* Style the input fields */
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Style the paragraph elements */
+p {
+    margin-bottom: 10px;
+}
+
+/* Style the container for the NFT tokens */
+#showTokens {
+    margin-top: 20px;
+    border: 0px solid #ccc;
+    padding: 10px;
+}
+
+/* Style the individual NFT token */
+.showToken {
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+/* Style the confirmation message */
+#confirmation {
+    font-weight: bold;
+    margin-bottom: 10px;
+}

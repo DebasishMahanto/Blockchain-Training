@@ -2,8 +2,8 @@ const { ethers, run } = require("hardhat");
 
 async function main() {
     const [deployer] = await ethers.getSigners();
-    const Token = await ethers.getContractFactory("ERC1155Update");
-    const token = await Token.deploy("uri");
+    const Token = await ethers.getContractFactory("Token1155");
+    const token = await Token.deploy();
     console.log("Token address:", token.address);
 
     // await token.deployTransaction.wait(5);

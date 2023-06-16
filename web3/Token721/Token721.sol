@@ -27,7 +27,7 @@ contract Token721 is ERC721URIStorage {
     }
 
     function burn(uint256 tokenId) external {
-        require(ownerOf(tokenId) == msg.sender, "Myerc721: not token owner");
+        require(ownerOf(tokenId) == msg.sender, "Token721: not token owner");
         _burn(tokenId);
         removeId(msg.sender, tokenId);
         // givenURI[tokenURI]=;
