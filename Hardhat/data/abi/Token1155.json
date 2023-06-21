@@ -209,6 +209,25 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
+      }
+    ],
+    "name": "checkURI",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_owner",
         "type": "address"
@@ -290,6 +309,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -312,6 +336,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
       {
         "internalType": "uint256[]",
         "name": "ids",

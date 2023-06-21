@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Place</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.0/dist/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="TokenMarket.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="TokenMarket.css" />
+  </head>
+
+  <body>
+    <h1>Market Place</h1>
+    <button
+      type="button"
+      class="btn btn-success"
+      id="connectButton"
+      onclick="connect()"
+    >
+      Connect Metamask
+    </button>
+    <br />
+    <p id="confirmation"></p>
+    <p id="account"></p>
+    <!-- <p id="tokenName"></p>
+    <p id="tokenSymbol"></p> -->
+    <p id="network"></p>
+
+    <!-- <label>Check Balance</label><br />
+    <input type="text" id="BOOwnerAdd" placeholder="Token owner address" />
+    <input type="number" id="BOTokenId" placeholder="Enter token ID" />
+    <button type="button" class="my-button" onclick="balanceOfToken()">
+      Check Balance
+    </button>
+    <br />
+    <br /> -->
+
+    <label>Mint Token</label><br />
+    <input type="number" id="MTokenId" placeholder="Enter token ID" />
+    <input type="number" id="MQuantity" placeholder="Enter quantity" />
+    <input type="text" id="M-URI" placeholder="Enter Token URI" />
+    <!-- <input type="text" id="M-To" placeholder="" /> -->
+
+    <label>
+      ERC721
+      <input type="radio" name="IsERC721" value="true" checked />
+    </label>
+    <label>
+      ERC1155
+      <input type="radio" name="IsERC721" value="false" />
+    </label>
+    <button type="button" class="btn btn-primary button" onclick="mintToken()">
+      Mint
+    </button>
+    <br />
+    <br />
+
+    <label>Set On Sale</label><br />
+    <input type="number" id="SOSTokenId" placeholder="Enter token ID" />
+    <input type="number" id="SOSQuantity" placeholder="Enter quantity" />
+    <input
+      type="number"
+      id="SOSTokenPrice"
+      placeholder="Enter price per token"
+    />
+
+    <label>
+      ERC721
+      <input type="radio" name="SOSIsERC721" value="true" checked />
+    </label>
+    <label>
+      ERC1155
+      <input type="radio" name="SOSIsERC721" value="false" /> </label
+    ><br />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="setOnSaleToken()"
+    >
+      Set Sale
+    </button>
+    <br />
+    <br />
+
+    <label>Cancel Sale</label><br />
+    <input type="number" id="CTokenId" placeholder="Enter token ID" />
+    <label>
+      ERC721
+      <input type="radio" name="CIsERC721" value="true" checked />
+    </label>
+    <label>
+      ERC1155
+      <input type="radio" name="CIsERC721" value="false" /> </label
+    ><br />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="cancelSaleToken()"
+    >
+      Cancel Sale
+    </button>
+    <br />
+    <br />
+
+    <label>Buy Tokens</label><br />
+    <input type="number" id="BTokenId" placeholder="Enter token ID" />
+    <input type="number" id="BQuantityID" placeholder="Enter quantity" />
+    <input type="number" id="BAmountID" placeholder="Enter amount to pay" />
+    <input type="text" id="BSellerID" placeholder="Enter seller address" />
+    <label>
+      ERC721
+      <input type="radio" name="BIsERC721" value="true" checked />
+    </label>
+    <label>
+      ERC1155
+      <input type="radio" name="BIsERC721" value="false" /> </label
+    ><br />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="purchaseToken()"
+    >
+      Buy
+    </button>
+    <br />
+    <br />
+
+    <label>721 Tokens</label><br />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="showToken721()"
+    >
+      View NFT721
+    </button>
+    <div id="showTokens721" class="d-flex flex-w"></div>
+    <br /><br />
+
+    <label>1155 tokens</label><br />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="showToken1155()"
+    >
+      View Token1155
+    </button>
+    <div id="showTokens1155" class="d-flex flex-w"></div>
+    <br /><br />
+
+    <label>Token On Sale</label><br />
+    <button
+      type="button"
+      class="btn btn-primary button"
+      onclick="showTokenOnSale()"
+    >
+      View
+    </button>
+    <div id="showTokensOnSaleID" class="d-flex flex-w"></div>
+    <br /><br />
+  </body>
+</html>

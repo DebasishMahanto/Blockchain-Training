@@ -9,7 +9,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -47,7 +47,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -82,7 +82,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -110,14 +110,14 @@
       ]
     },
     "C:\\Users\\DELL\\Desktop\\Blockchain Training\\Hardhat\\contracts\\MarketPlace.sol": {
-      "lastModificationDate": 1685708618459,
-      "contentHash": "22792d1d1957b1ea1cb709f0da4bc9fb",
+      "lastModificationDate": 1687338813714,
+      "contentHash": "4686557566d7e3ee0fb605834dd01f0e",
       "sourceName": "contracts/MarketPlace.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -137,8 +137,10 @@
         }
       },
       "imports": [
-        "./ERC1155.sol",
-        "./ERC721.sol"
+        "./Token1155.sol",
+        "./Token721.sol",
+        "./IToken721.sol",
+        "./IToken1155.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -155,7 +157,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -193,7 +195,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -228,7 +230,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -265,7 +267,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -307,7 +309,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -342,7 +344,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -377,7 +379,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -414,7 +416,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -451,7 +453,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -488,7 +490,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -525,7 +527,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -560,7 +562,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -597,7 +599,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -634,7 +636,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -677,7 +679,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -715,7 +717,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -750,7 +752,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -785,7 +787,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -820,7 +822,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -857,7 +859,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -893,7 +895,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -928,7 +930,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -963,7 +965,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -998,7 +1000,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1036,7 +1038,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1071,7 +1073,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1102,14 +1104,14 @@
       ]
     },
     "C:\\Users\\DELL\\Desktop\\Blockchain Training\\Hardhat\\contracts\\Token721.sol": {
-      "lastModificationDate": 1686739593829,
-      "contentHash": "106dd910940c6aeeac51b360214045a8",
+      "lastModificationDate": 1687339547474,
+      "contentHash": "641384fc4e4c82133ddd2cf3377cd665",
       "sourceName": "contracts/Token721.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1129,7 +1131,8 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol"
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        "./IToken721.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -1146,7 +1149,7 @@
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1177,14 +1180,14 @@
       ]
     },
     "C:\\Users\\DELL\\Desktop\\Blockchain Training\\Hardhat\\contracts\\Token1155.sol": {
-      "lastModificationDate": 1686853483335,
-      "contentHash": "b10a451f35c375f010bb0ed194c7f129",
+      "lastModificationDate": 1687339578603,
+      "contentHash": "4705c86b3c20f93860b36bca31168a53",
       "sourceName": "contracts/Token1155.sol",
       "solcConfig": {
         "version": "0.8.18",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -1204,13 +1207,84 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol"
+        "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol",
+        "./IToken1155.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
         "Token1155"
+      ]
+    },
+    "C:\\Users\\DELL\\Desktop\\Blockchain Training\\Hardhat\\contracts\\IToken721.sol": {
+      "lastModificationDate": 1687170853643,
+      "contentHash": "ede666bfffa62c0d34410d542686a6f5",
+      "sourceName": "contracts/IToken721.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IToken721"
+      ]
+    },
+    "C:\\Users\\DELL\\Desktop\\Blockchain Training\\Hardhat\\contracts\\IToken1155.sol": {
+      "lastModificationDate": 1687335857676,
+      "contentHash": "171d8e7b544ac2adf90695b9c5e1ae75",
+      "sourceName": "contracts/IToken1155.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IToken1155"
       ]
     }
   }
