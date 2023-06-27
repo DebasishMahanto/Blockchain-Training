@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.0/dist/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="Token.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ERC20</title>
+  </head>
+
+  <body>
+    <h1>ERC20</h1>
+
+    <button id="connectButton" type="button">connect to Metamask</button>
+    <p id="account"></p>
+    <p id="confirmation"></p>
+    <p id="tokenName"></p>
+    <p id="tokenSymbol"></p>
+    <p id="totalSupply"></p>
+    <p id="balanceId"></p>
+
+    <input type="number" id="mintAmount" placeholder="enter amount to mint" />
+    <button class="btn btn-primary button" onclick="mintToken()">Mint</button>
+    <br />
+    <br />
+
+    <input type="number" id="burnAmount" placeholder="enter amount to burn" />
+    <button class="btn btn-primary button" onclick="burnToken()">Burn</button>
+    <br />
+    <br />
+
+    <input
+      type="number"
+      id="transferAmount"
+      placeholder="enter amount to transfer"
+    />
+    <input type="text" id="receiverAdd" placeholder="receiver address" />
+    <button class="btn btn-primary button" onclick="transferToken()">
+      Transfer
+    </button>
+    <br />
+    <br />
+
+    <input
+      type="number"
+      id="approvedQuantity"
+      placeholder="enter number of token to approve"
+    />
+    <input type="text" id="spenderAdd" placeholder="spender address" />
+    <button class="btn btn-primary button" onclick="approveToken()">
+      Approve
+    </button>
+    <br />
+    <br />
+
+    <input type="text" id="ownerAdd" placeholder="owner address" />
+    <input type="text" id="IDspenderAdd" placeholder="spender address" />
+    <button class="btn btn-primary button" onclick="allowanceCheck()">
+      check allowance
+    </button>
+    <br />
+    <br />
+
+    <input
+      type="number"
+      id="numTransfer"
+      placeholder="enter number of token to transfer"
+    />
+    <input type="text" id="senderAdd" placeholder="sender address" />
+    <input type="text" id="IDreceiverAdd" placeholder="receiver address" />
+    <button class="btn btn-primary button" onclick="aTransferFrom()">
+      Transfer
+    </button>
+    <br />
+    <br />
+  </body>
+</html>
